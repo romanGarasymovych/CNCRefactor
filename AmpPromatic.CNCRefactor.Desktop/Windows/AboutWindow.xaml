@@ -1,0 +1,18 @@
+﻿<Window x:Class="AmpPromatic.CNCRefactor.Desktop.Windows.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AmpPromatic.CNCRefactor.Desktop.Windows"
+        mc:Ignorable="d"
+        Title="About" Height="193" Width="593">
+    <Grid>
+        <StackPanel Margin="10,10,10,10">
+            <TextBlock Text="CNC Refactor is software created for migrating CNC files from one CNC machine to another."/>
+            <TextBlock Text="The software was designed and created by Roman Garasymovych for AMP Promatic Inc."/>
+            <Separator/>
+            <TextBlock Text="All rights reserved"/>
+            <TextBlock Text="2025"/>
+        </StackPanel>
+    </Grid>
+</Window>
