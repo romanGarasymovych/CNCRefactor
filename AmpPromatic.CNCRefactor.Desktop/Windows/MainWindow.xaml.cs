@@ -298,9 +298,10 @@ namespace AmpPromatic.CNCRefactor.Desktop.Windows
                     {
                         results.Add(RefactorResult.Failure(ResultType.FileEmpty, "File is empty", file.FilePath));
                     }
-                    var newLines = ReplaceValues(lines, file.Transition);
-                    InsertLines(newLines);
-                    refactors.Add(fileInfo, [.. newLines]);
+                    ReplaceValues(lines);
+                    TransitionValues(lines, file.Transition);
+                    InsertLines(lines);
+                    refactors.Add(fileInfo, [.. lines]);
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -347,6 +348,37 @@ namespace AmpPromatic.CNCRefactor.Desktop.Windows
             return results;
         }
 
+        private void ReplaceValues(List<string> lines)
+        {
+            var replacements = _context.Replacements.Where(r => r.MachineId == ToMachine!.MachineId).ToList();
+            foreach (var replacement in replacements)
+            {
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    var line = lines[i];
+                    if (line.Contains(replacement.TextToReplace))
+                    {
+                        lines[i] = line
+                            .Replace(replacement.TextToReplace, replacement.Text);
+                    }
+                }
+            }
+        }
+
+        private void TransitionValues(List<string> lines, Transition transition)
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                var line = lines[i];
+                if (line.Contains(transition.OldText))
+                {
+                    lines[i] = line
+                        .Replace(transition.OldText, transition.NewText);
+                }
+            }
+
+        }
+
         private void InsertLines(List<string> newLines)
         {
             var insertions = _context.Insertions.Where(i => i.MachineId == ToMachine!.MachineId).ToList();
@@ -379,38 +411,6 @@ namespace AmpPromatic.CNCRefactor.Desktop.Windows
                     lines.Add(currentLine);
                 }
             }
-            return lines;
-        }
-
-        private List<string> ReplaceValues(List<string> lines, Transition transition)
-        {
-            var replacements = _context.Replacements.Where(r => r.MachineId == ToMachine!.MachineId).ToList();
-            foreach (var replacement in replacements)
-            {
-                for (int i = 0; i < lines.Count; i++)
-                {
-                    var line = lines[i];
-                    if (line.Contains(replacement.TextToReplace))
-                    {
-                        lines[i] = line
-                            .Replace(replacement.TextToReplace, replacement.Text);
-                    }
-                }
-            }
-            // transition replacements
-            foreach (var replacement in replacements)
-            {
-                for (int i = 0; i < lines.Count; i++)
-                {
-                    var line = lines[i];
-                    if (line.Contains(replacement.Text))
-                    {
-                        lines[i] = line
-                            .Replace(transition.OldText, transition.NewText);
-                    }
-                }
-            }
-
             return lines;
         }
 
