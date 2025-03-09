@@ -163,7 +163,7 @@ namespace AmpPromatic.CNCRefactor.Desktop.Windows
             _context.Initialize();
             IsEditing = false;
             LoadData();
-            DefaultTransition = Transitions.First(t => t.NewText == "227");
+            DefaultTransition = Transitions.FirstOrDefault(t => t.NewText.Contains("227"));
             Transition = DefaultTransition;
             NonTransition = DefaultTransition;
             InitializeComponent();
